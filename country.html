@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+
+<title>Country — WorldMetrics</title>
+
+<link
+rel="stylesheet"
+href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+/>
+
+<style>
+
+:root{
+--blue:#1677ff;
+--bg:#f4f7fb;
+--card:#fff;
+--text:#172033;
+--muted:#667085;
+--border:#e4e8f0;
+--footer:#101828;
+}
+
+body.dark{
+--bg:#0b1220;
+--card:#151f31;
+--text:#f8fafc;
+--muted:#aab4c4;
+--border:#2b374c;
+--footer:#070c16;
+}
+
+*{
+box-sizing:border-box;
+margin:0;
+padding:0;
+}
+
+body{
+font-family:Arial,sans-serif;
+background:var(--bg);
+color:var(--text);
+}
+
+header{
+background:var(--card);
+border-bottom:1px solid var(--border);
+padding:15px 6%;
+position:sticky;
+top:0;
+z-index:1000;
+}
+
+.nav{
+max-width:1200px;
+margin:auto;
+display:flex;
+align-items:center;
+justify-content:space-between;
+}
+
+.logo{
+font-size:25px;
+font-weight:bold;
+color:var(--blue);
+text-decoration:none;
+}
+
+nav{
+display:flex;
+gap:20px;
+}
+
+nav a{
+text-decoration:none;
+color:var(--muted);
+font-weight:bold;
+}
+
+nav a:hover{
+color:var(--blue);
+}
+
+#theme{
+padding:10px;
+border:1px solid var(--border);
+background:var(--card);
+color:var(--text);
+border-radius:10px;
+cursor:pointer;
+}
+
+.container{
+max-width:1100px;
+margin:auto;
+padding:40px 20px;
+}
+
+.profile{
+background:var(--card);
+border:1px solid var(--border);
+border-radius:22px;
+padding:30px;
+text-align:center;
+margin-bottom:25px;
+}
+
+.flag{
+width:180px;
+height:115px;
+object-fit:cover;
+border-radius:10px;
+margin-bottom:18px;
+}
+
+.profile h1{
+font-size:35px;
+}
+
+.profile p{
+color:var(--muted);
+margin-top:8px;
+}
+
+.stats{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:18px;
+margin-bottom:25px;
+}
+
+.card{
+background:var(--card);
+border:1px solid var(--border);
+border-radius:17px;
+padding:23px;
+}
+
+.card h3{
+font-size:14px;
+color:var(--muted);
+margin-bottom:10px;
+}
+
+.number{
+font-size:25px;
+font-weight:bold;
+color:var(--blue);
+}
+
+.map{
+height:420px;
+border-radius:20px;
+overflow:hidden;
+border:1px solid var(--border);
+}
+
+.creator{
+text-align:center;
+padding:30px;
+}
+
+.creator strong{
+color:var(--blue);
+}
+
+footer{
+background:var(--footer);
+color:#ddd;
+text-align:center;
+padding:30px;
+}
+
+@media(max-width:750px){
+nav{display:none}
+.stats{grid-template-columns:1fr}
+.profile h1{font-size:29px}
+}
+
+</style>
+</head>
+
+<body>
+
+<header>
+
+<div class="nav">
+
+<a class="logo" href="index.html">
+🌍 WorldMetrics
+</a>
+
+<nav>
+<a href="index.html">🏠 Home</a>
+<a href="world.html">🌎 World</a>
+<a href="countries.html">🌐 Countries</a>
+<a href="compare.html">⚖️ Compare</a>
+</nav>
+
+<button id="theme">🌙</button>
+
+</div>
+
+</header>
+
+<div class="container">
+
+<div id="country">
+Loading country...
+</div>
+
+</div>
+
+<div class="creator">
+
+✨ This website is created by
+<strong>Ayan Kumar</strong>
+
+</div>
+
+<footer>
+
+<strong>🌍 WorldMetrics</strong>
+
+<br><br>
+
+© 2026 WorldMetrics
+
+</footer>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<script>
+
+const theme=document.getElementById("theme");
+
+if(localStorage.getItem("worldmetrics-theme")==="dark"){
+document.body.classList.add("dark");
+theme.textContent="☀️";
+}
+
+theme.onclick=()=>{
+document.body.classList.toggle("dark");
+
+const dark=
+document.body.classList.contains("dark");
+
+localStorage.setItem(
+"worldmetrics-theme",
+dark?"dark":"light"
+);
+
+theme.textContent=dark?"☀️":"🌙";
+};
+
+
+const params=
+new URLSearchParams(
+location.search
+);
+
+const code=
+params.get("code");
+
+
+async function loadCountry(){
+
+try{
+
+let url;
+
+if(code){
+
+url=
+"https://restcountries.com/v3.1/alpha/"
++code;
+
+}else{
+
+url=
+"https://restcountries.com/v3.1/name/India";
+
+}
+
+const response=
+await fetch(url);
+
+const result=
+await response.json();
+
+const c=result[0];
+
+document.title=
+c.name.common+
+" — WorldMetrics";
+
+
+document.getElementById(
+"country"
+).innerHTML=`
+
+<div class="profile">
+
+<img
+class="flag"
+src="${c.flags.svg}"
+alt="${c.name.common}"
+>
+
+<h1>
+${c.name.common}
+</h1>
+
+<p>
+${c.official||c.name.official}
+</p>
+
+</div>
+
+
+<div class="stats">
+
+<div class="card">
+<h3>👥 Population</h3>
+<div class="number">
+${c.population
+?c.population.toLocaleString()
+:"N/A"}
+</div>
+</div>
+
+
+<div class="card">
+<h3>📏 Area</h3>
+<div class="number">
+${c.area
+?c.area.toLocaleString()
+:"N/A"} km²
+</div>
+</div>
+
+
+<div class="card">
+<h3>🏛️ Capital</h3>
+<div class="number">
+${c.capital
+?c.capital.join(", ")
+:"N/A"}
+</div>
+</div>
+
+
+<div class="card">
+<h3>🌍 Region</h3>
+<div class="number">
+${c.region||"N/A"}
+</div>
+</div>
+
+
+<div class="card">
+<h3>🗣️ Languages</h3>
+<div class="number">
+${c.languages
+?Object.values(c.languages).join(", ")
+:"N/A"}
+</div>
+</div>
+
+
+<div class="card">
+<h3>💰 Currency</h3>
+<div class="number">
+${c.currencies
+?Object.values(c.currencies)
+.map(x=>x.name)
+.join(", ")
+:"N/A"}
+</div>
+</div>
+
+</div>
+
+
+<h2 style="margin-bottom:15px">
+🗺️ Location
+</h2>
+
+<div id="map" class="map"></div>
+
+`;
+
+
+if(c.latlng){
+
+const map=
+L.map("map")
+.setView(c.latlng,4);
+
+
+L.tileLayer(
+"https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+{
+attribution:
+"© OpenStreetMap contributors"
+}
+).addTo(map);
+
+
+L.marker(c.latlng)
+.addTo(map)
+.bindPopup(
+"<strong>"
++c.name.common+
+"</strong>"
+)
+.openPopup();
+
+}
+
+}catch(error){
+
+document.getElementById(
+"country"
+).innerHTML=
+"<h2>Country information could not be loaded.</h2>";
+
+}
+
+}
+
+loadCountry();
+
+</script>
+
+</body>
+</html>
