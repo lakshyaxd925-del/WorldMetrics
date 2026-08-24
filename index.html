@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>WorldPulse — World Statistics</title>
+
+<meta name="description"
+content="WorldPulse — explore world population, country rankings and demographic statistics using public data.">
+
+<style>
+:root{
+    --blue:#1264ff;
+    --blue2:#084bc4;
+    --bg:#f4f7fb;
+    --card:#fff;
+    --text:#172033;
+    --muted:#667085;
+    --border:#e4e8f0;
+    --green:#12b76a;
+    --red:#d92d20;
+    --shadow:0 10px 30px rgba(16,24,40,.07);
+}
+
+body.dark{
+    --bg:#0b1220;
+    --card:#151f31;
+    --text:#f8fafc;
+    --muted:#aab4c4;
+    --border:#2b374c;
+    --shadow:0 10px 30px rgba(0,0,0,.2);
+}
+
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
+
+body{
+    font-family:Arial,Helvetica,sans-serif;
+    background:var(--bg);
+    color:var(--text);
+    transition:.2s;
+}
+
+header{
+    position:sticky;
+    top:0;
+    z-index:100;
+    background:var(--card);
+    border-bottom:1px solid var(--border);
+}
+
+.nav{
+    max-width:1200px;
+    margin:auto;
+    padding:15px 20px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+}
+
+.logo{
+    color:var(--blue);
+    text-decoration:none;
+    font-size:25px;
+    font-weight:800;
+}
+
+nav{
+    display:flex;
+    gap:25px;
+}
+
+nav a{
+    color:var(--muted);
+    text-decoration:none;
+    font-size:14px;
+    font-weight:bold;
+}
+
+nav a:hover{
+    color:var(--blue);
+}
+
+.actions{
+    display:flex;
+    gap:8px;
+}
+
+.icon-btn{
+    width:40px;
+    height:40px;
+    border:1px solid var(--border);
+    border-radius:10px;
+    background:var(--card);
+    color:var(--text);
+    cursor:pointer;
+    font-size:17px;
+}
+
+.hero{
+    text-align:center;
+    padding:75px 20px 45px;
+}
+
+.badge{
+    display:inline-block;
+    padding:8px 14px;
+    border-radius:30px;
+    background:#eaf1ff;
+    color:var(--blue);
+    font-size:12px;
+    font-weight:bold;
+    margin-bottom:18px;
+}
+
+body.dark .badge{
+    background:#14264b;
+}
+
+.hero h1{
+    font-size:clamp(42px,7vw,72px);
+    line-height:1;
+}
+
+.hero h1 span{
+    color:var(--blue);
+}
+
+.hero p{
+    margin-top:18px;
+    color:var(--muted);
+    font-size:17px;
+}
+
+.container{
+    max-width:1150px;
+    margin:auto;
+    padding:0 20px 60px;
+}
+
+.population{
+    background:var(--card);
+    border:1px solid var(--border);
+    box-shadow:var(--shadow);
+    border-radius:24px;
+    text-align:center;
+    padding:42px 20px;
+}
+
+.label{
+    color:var(--muted);
+    font-size:13px;
+    font-weight:bold;
+}
+
+#population{
+    color:var(--blue);
+    font-size:clamp(38px,7vw,68px);
+    font-weight:800;
+    margin:12px 0;
+}
+
+.status{
+    color:var(--muted);
+    font-size:12px;
+}
+
+.section{
+    margin-top:50px;
+}
+
+.section-title{
+    margin-bottom:20px;
+}
+
+.section-title h2{
+    font-size:28px;
+}
+
+.section-title p{
+    color:var(--muted);
+    margin-top:6px;
+}
+
+.grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:18px;
+}
+
+.card{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:18px;
+    padding:24px;
+    box-shadow:var(--shadow);
+}
+
+.icon{
+    font-size:30px;
+}
+
+.card h3{
+    color:var(--muted);
+    font-size:14px;
+    margin-top:12px;
+}
+
+.value{
+    font-size:28px;
+    font-weight:800;
+    margin-top:8px;
+}
+
+.small{
+    color:var(--muted);
+    font-size:12px;
+    margin-top:6px;
+}
+
+.search{
+    margin-bottom:20px;
+}
+
+.search input{
+    width:100%;
+    padding:15px 17px;
+    border:1px solid var(--border);
+    border-radius:13px;
+    background:var(--card);
+    color:var(--text);
+    outline:none;
+    font-size:15px;
+}
+
+.country-grid{
+    display:grid;
+    grid-template-columns:repeat(5,1fr);
+    gap:14px;
+}
+
+.country{
+    text-decoration:none;
+    color:var(--text);
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:16px;
+    padding:18px;
+    text-align:center;
+    transition:.2s;
+}
+
+.country:hover{
+    border-color:var(--blue);
+    transform:translateY(-4px);
+}
+
+.country .flag{
+    font-size:36px;
+}
+
+.country h3{
+    margin-top:8px;
+    font-size:15px;
+}
+
+.country p{
+    color:var(--muted);
+    font-size:12px;
+    margin-top:5px;
+}
+
+footer{
+    background:#101828;
+    color:white;
+    text-align:center;
+    padding:30px;
+    line-height:1.7;
+}
+
+footer a{
+    color:#9ec1ff;
+}
+
+#top{
+    display:none;
+    position:fixed;
+    right:20px;
+    bottom:20px;
+    width:45px;
+    height:45px;
+    border:0;
+    border-radius:50%;
+    background:var(--blue);
+    color:white;
+    cursor:pointer;
+    font-size:20px;
+}
+
+@media(max-width:850px){
+
+    nav{
+        display:none;
+    }
+
+    .grid{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .country-grid{
+        grid-template-columns:repeat(3,1fr);
+    }
+}
+
+@media(max-width:550px){
+
+    .grid,
+    .country-grid{
+        grid-template-columns:1fr;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+<div class="nav">
+
+<a href="index.html" class="logo">🌍 WorldPulse</a>
+
+<nav>
+<a href="index.html">🏠 Home</a>
+<a href="world.html">🌎 World</a>
+<a href="country.html?country=IND">🌐 Countries</a>
+</nav>
+
+<div class="actions">
+<button class="icon-btn" id="theme">🌙</button>
+</div>
+
+</div>
+</header>
+
+
+<section class="hero">
+
+<div class="badge">LIVE DATA DASHBOARD</div>
+
+<h1>The world<br><span>in numbers.</span></h1>
+
+<p>
+Explore population data and country statistics from public data sources.
+</p>
+
+</section>
+
+
+<div class="container">
+
+<section class="population">
+
+<div class="label">
+ESTIMATED WORLD POPULATION
+</div>
+
+<div id="population">
+Loading...
+</div>
+
+<div class="status" id="status">
+Connecting to World Bank...
+</div>
+
+</section>
+
+
+<section class="section">
+
+<div class="section-title">
+<h2>📊 World Overview</h2>
+<p>Latest available population information.</p>
+</div>
+
+<div class="grid">
+
+<div class="card">
+<div class="icon">👥</div>
+<h3>Latest Population</h3>
+<div class="value" id="latest">—</div>
+<div class="small">Official observation</div>
+</div>
+
+<div class="card">
+<div class="icon">📅</div>
+<h3>Data Year</h3>
+<div class="value" id="year">—</div>
+<div class="small">Latest available year</div>
+</div>
+
+<div class="card">
+<div class="icon">📈</div>
+<h3>Annual Change</h3>
+<div class="value" id="growth">—</div>
+<div class="small">Compared with previous year</div>
+</div>
+
+</div>
+
+</section>
+
+
+<section class="section">
+
+<div class="section-title">
+<h2>🌎 Explore Countries</h2>
+<p>Search and open a dynamic country page.</p>
+</div>
+
+<div class="search">
+<input
+id="search"
+placeholder="Search a country..."
+autocomplete="off">
+</div>
+
+<div class="country-grid" id="countries"></div>
+
+</section>
+
+</div>
+
+
+<footer>
+
+© 2026 WorldPulse<br>
+
+Population data:
+<a href="https://data.worldbank.org/indicator/SP.POP.TOTL"
+target="_blank">
+World Bank
+</a>
+
+</footer>
+
+
+<button id="top">↑</button>
+
+
+<script>
+
+const API =
+"https://api.worldbank.org/v2/country/WLD/indicator/SP.POP.TOTL?format=json&per_page=10";
+
+let latest;
+let previous;
+let latestYear;
+let previousYear;
+
+
+async function loadWorld(){
+
+    try{
+
+        const response =
+        await fetch(API);
+
+        if(!response.ok)
+            throw new Error("API error");
+
+        const json =
+        await response.json();
+
+        const rows =
+        json[1].filter(
+            x => x.value !== null
+        );
+
+        latest = Number(rows[0].value);
+        previous = Number(rows[1].value);
+
+        latestYear =
+        Number(rows[0].date);
+
+        previousYear =
+        Number(rows[1].date);
+
+        document.getElementById("latest")
+        .textContent =
+        latest.toLocaleString();
+
+        document.getElementById("year")
+        .textContent =
+        latestYear;
+
+        const change =
+        latest - previous;
+
+        const rate =
+        (change / previous) * 100;
+
+        document.getElementById("growth")
+        .textContent =
+        rate.toFixed(2) + "%";
+
+        document.getElementById("status")
+        .textContent =
+        "World Bank • " + latestYear;
+
+        startClock();
+
+    }catch(error){
+
+        console.error(error);
+
+        document.getElementById("population")
+        .textContent =
+        "Unavailable";
+
+        document.getElementById("status")
+        .textContent =
+        "Could not load population data";
+
+    }
+}
+
+
+function startClock(){
+
+    const yearlyChange =
+        (latest - previous) /
+        (latestYear - previousYear);
+
+    function update(){
+
+        const now = new Date();
+
+        const start =
+            new Date(
+                latestYear,
+                0,
+                1
+            );
+
+        const elapsed =
+            (now - start) /
+            (1000 * 60 * 60 * 24);
+
+        const estimated =
+            latest +
+            yearlyChange *
+            (elapsed / 365.2425);
+
+        document.getElementById("population")
+        .textContent =
+        Math.round(estimated)
+        .toLocaleString();
+
+    }
+
+    update();
+
+    setInterval(update,1000);
+}
+
+
+/*
+Country shortcuts.
+The World Bank API can provide many
+countries, so these are only the
+most useful shortcuts for the homepage.
+*/
+
+const featured = [
+
+["IND","🇮🇳","India"],
+["CHN","🇨🇳","China"],
+["USA","🇺🇸","United States"],
+["IDN","🇮🇩","Indonesia"],
+["BRA","🇧🇷","Brazil"],
+["PAK","🇵🇰","Pakistan"],
+["NGA","🇳🇬","Nigeria"],
+["JPN","🇯🇵","Japan"],
+["DEU","🇩🇪","Germany"],
+["GBR","🇬🇧","United Kingdom"]
+
+];
+
+
+const countryBox =
+document.getElementById("countries");
+
+
+function renderCountries(){
+
+    countryBox.innerHTML = "";
+
+    featured.forEach(country => {
+
+        const card =
+        document.createElement("a");
+
+        card.className = "country";
+
+        card.dataset.name =
+        country[2].toLowerCase();
+
+        card.href =
+        "country.html?country=" +
+        country[0];
+
+        card.innerHTML = `
+            <div class="flag">${country[1]}</div>
+            <h3>${country[2]}</h3>
+            <p>View statistics →</p>
+        `;
+
+        countryBox.appendChild(card);
+
+    });
+}
+
+
+document.getElementById("search")
+.addEventListener("input", function(){
+
+    const query =
+    this.value.toLowerCase();
+
+    document.querySelectorAll(".country")
+    .forEach(card => {
+
+        card.style.display =
+        card.dataset.name.includes(query)
+        ? ""
+        : "none";
+
+    });
+
+});
+
+
+/* Dark mode */
+
+const theme =
+document.getElementById("theme");
+
+if(
+localStorage.getItem("worldpulse-theme")
+==="dark"
+){
+
+    document.body.classList.add("dark");
+    theme.textContent="☀️";
+
+}
+
+theme.onclick = () => {
+
+    document.body.classList.toggle("dark");
+
+    const dark =
+    document.body.classList.contains("dark");
+
+    localStorage.setItem(
+        "worldpulse-theme",
+        dark ? "dark" : "light"
+    );
+
+    theme.textContent =
+    dark ? "☀️" : "🌙";
+
+};
+
+
+/* Back to top */
+
+window.addEventListener("scroll",()=>{
+
+    document.getElementById("top")
+    .style.display =
+    window.scrollY > 500
+    ? "block"
+    : "none";
+
+});
+
+document.getElementById("top")
+.onclick = () => {
+
+    window.scrollTo({
+        top:0,
+        behavior:"smooth"
+    });
+
+};
+
+
+renderCountries();
+loadWorld();
+
+</script>
+
+</body>
+</html>
