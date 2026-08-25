@@ -2,235 +2,363 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>WorldMetrics — World Statistics</title>
 
 <meta name="description"
-content="WorldMetrics provides world population, country information, maps and global statistics.">
+content="Explore world statistics, countries, population data and global information on WorldMetrics.">
 
 <style>
 :root{
---blue:#1677ff;
---purple:#7c3aed;
---bg:#f4f7fb;
---card:#fff;
---text:#172033;
---muted:#667085;
---border:#e4e8f0;
---footer:#101828;
+    --blue:#1677ff;
+    --bg:#f4f7fb;
+    --card:#ffffff;
+    --text:#172033;
+    --muted:#667085;
+    --border:#e4e8f0;
+    --footer:#101828;
 }
 
 body.dark{
---bg:#0b1220;
---card:#151f31;
---text:#f8fafc;
---muted:#aab4c4;
---border:#2b374c;
---footer:#070c16;
+    --bg:#0b1220;
+    --card:#151f31;
+    --text:#f8fafc;
+    --muted:#aab4c4;
+    --border:#2b374c;
+    --footer:#070c16;
 }
 
 *{
-box-sizing:border-box;
-margin:0;
-padding:0;
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
 }
 
 body{
-font-family:Arial,Helvetica,sans-serif;
-background:var(--bg);
-color:var(--text);
+    font-family:Arial,Helvetica,sans-serif;
+    background:var(--bg);
+    color:var(--text);
 }
 
+/* HEADER */
+
 header{
-position:sticky;
-top:0;
-z-index:1000;
-background:var(--card);
-border-bottom:1px solid var(--border);
-padding:15px 6%;
+    background:var(--card);
+    border-bottom:1px solid var(--border);
+    padding:14px 6%;
+    position:sticky;
+    top:0;
+    z-index:1000;
 }
 
 .nav{
-max-width:1200px;
-margin:auto;
-display:flex;
-align-items:center;
-justify-content:space-between;
-gap:20px;
+    max-width:1250px;
+    margin:auto;
+    display:flex;
+    align-items:center;
+    gap:18px;
 }
 
 .logo{
-font-size:25px;
-font-weight:bold;
-color:var(--blue);
-text-decoration:none;
+    font-size:25px;
+    font-weight:bold;
+    color:var(--blue);
+    text-decoration:none;
+    white-space:nowrap;
 }
 
 nav{
-display:flex;
-gap:20px;
+    display:flex;
+    gap:16px;
+    margin-left:auto;
 }
 
 nav a{
-text-decoration:none;
-color:var(--muted);
-font-weight:bold;
-font-size:14px;
+    text-decoration:none;
+    color:var(--muted);
+    font-weight:bold;
+    font-size:14px;
 }
 
 nav a:hover{
-color:var(--blue);
+    color:var(--blue);
+}
+
+/* SEARCH */
+
+.search-wrapper{
+    position:relative;
+    width:260px;
+}
+
+#countrySearch{
+    width:100%;
+    padding:11px 14px;
+    border:1px solid var(--border);
+    border-radius:12px;
+    background:var(--bg);
+    color:var(--text);
+    outline:none;
+}
+
+#countrySearch:focus{
+    border-color:var(--blue);
+}
+
+.search-results{
+    position:absolute;
+    top:calc(100% + 7px);
+    left:0;
+    right:0;
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:14px;
+    overflow:hidden;
+    box-shadow:0 12px 30px rgba(0,0,0,.12);
+    display:none;
+    max-height:350px;
+    overflow-y:auto;
+}
+
+.search-item{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:11px;
+    cursor:pointer;
+    border-bottom:1px solid var(--border);
+}
+
+.search-item:last-child{
+    border-bottom:none;
+}
+
+.search-item:hover{
+    background:var(--bg);
+}
+
+.search-flag{
+    width:28px;
+    height:19px;
+    object-fit:cover;
+    border-radius:3px;
+}
+
+.search-name{
+    font-size:14px;
+    font-weight:bold;
 }
 
 #theme{
-border:1px solid var(--border);
-background:var(--card);
-color:var(--text);
-border-radius:10px;
-padding:10px;
-cursor:pointer;
-font-size:17px;
+    border:1px solid var(--border);
+    background:var(--card);
+    color:var(--text);
+    border-radius:10px;
+    padding:9px 11px;
+    cursor:pointer;
 }
 
+/* HERO */
+
 .hero{
-text-align:center;
-padding:75px 20px 40px;
+    text-align:center;
+    padding:70px 20px 35px;
 }
 
 .hero-icon{
-font-size:60px;
+    font-size:58px;
 }
 
 .hero h1{
-font-size:48px;
-margin:12px 0;
+    font-size:48px;
+    margin:12px 0;
 }
 
 .hero h1 span{
-color:var(--blue);
+    color:var(--blue);
 }
 
 .hero p{
-color:var(--muted);
-font-size:18px;
+    color:var(--muted);
+    font-size:17px;
 }
 
+/* MOBILE HERO SEARCH */
+
+.hero-search{
+    max-width:600px;
+    margin:28px auto 0;
+    position:relative;
+}
+
+#heroCountrySearch{
+    width:100%;
+    padding:17px 20px;
+    border:1px solid var(--border);
+    border-radius:15px;
+    background:var(--card);
+    color:var(--text);
+    font-size:16px;
+    outline:none;
+}
+
+#heroCountrySearch:focus{
+    border-color:var(--blue);
+}
+
+#heroResults{
+    text-align:left;
+}
+
+/* POPULATION */
+
 .population{
-max-width:900px;
-margin:20px auto 40px;
-padding:40px 25px;
-background:var(--card);
-border:1px solid var(--border);
-border-radius:22px;
-text-align:center;
-box-shadow:0 10px 35px rgba(0,0,0,.06);
+    max-width:900px;
+    margin:20px auto 45px;
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:22px;
+    padding:38px 20px;
+    text-align:center;
 }
 
 .population h2{
-color:var(--muted);
-font-size:17px;
-margin-bottom:15px;
+    font-size:17px;
+    color:var(--muted);
+    margin-bottom:14px;
 }
 
 #population{
-font-size:48px;
-font-weight:bold;
-color:var(--blue);
+    font-size:48px;
+    font-weight:bold;
+    color:var(--blue);
 }
 
 .updated{
-margin-top:10px;
-font-size:13px;
-color:var(--muted);
+    color:var(--muted);
+    margin-top:10px;
+    font-size:13px;
 }
 
+/* STATS */
+
 .grid{
-max-width:1100px;
-margin:auto;
-padding:20px;
-display:grid;
-grid-template-columns:repeat(3,1fr);
-gap:20px;
+    max-width:1150px;
+    margin:auto;
+    padding:0 20px 40px;
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:20px;
 }
 
 .card{
-background:var(--card);
-border:1px solid var(--border);
-border-radius:18px;
-padding:25px;
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:18px;
+    padding:25px;
 }
 
 .card-icon{
-font-size:32px;
-margin-bottom:12px;
+    font-size:30px;
+    margin-bottom:12px;
 }
 
 .card h3{
-font-size:15px;
-color:var(--muted);
-margin-bottom:10px;
+    color:var(--muted);
+    font-size:15px;
+    margin-bottom:10px;
 }
 
 .number{
-font-size:28px;
-font-weight:bold;
+    font-size:27px;
+    font-weight:bold;
 }
 
+/* QUICK LINKS */
+
 .links{
-max-width:1000px;
-margin:20px auto 50px;
-padding:20px;
-display:grid;
-grid-template-columns:repeat(3,1fr);
-gap:15px;
+    max-width:1000px;
+    margin:0 auto 40px;
+    padding:0 20px;
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:15px;
 }
 
 .link{
-background:var(--card);
-border:1px solid var(--border);
-border-radius:15px;
-padding:20px;
-text-align:center;
-text-decoration:none;
-color:var(--text);
-font-weight:bold;
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:15px;
+    padding:20px;
+    text-align:center;
+    text-decoration:none;
+    color:var(--text);
+    font-weight:bold;
 }
 
 .link:hover{
-border-color:var(--blue);
-color:var(--blue);
+    border-color:var(--blue);
+    color:var(--blue);
 }
+
+/* CREATOR */
 
 .creator{
-text-align:center;
-padding:25px;
+    text-align:center;
+    padding:20px 20px 35px;
 }
 
-.creator span{
-padding:12px 22px;
-border:1px solid var(--border);
-background:var(--card);
-border-radius:50px;
-color:var(--muted);
+.creator-badge{
+    display:inline-block;
+    padding:12px 22px;
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:50px;
+    color:var(--muted);
 }
 
-.creator strong{
-color:var(--blue);
+.creator-badge strong{
+    color:var(--blue);
 }
+
+/* FOOTER */
 
 footer{
-background:var(--footer);
-color:#d1d5db;
-text-align:center;
-padding:30px;
+    background:var(--footer);
+    color:#d1d5db;
+    text-align:center;
+    padding:30px;
+    line-height:1.7;
+}
+
+@media(max-width:1000px){
+    nav{
+        display:none;
+    }
+
+    .nav{
+        justify-content:space-between;
+    }
 }
 
 @media(max-width:750px){
-nav{display:none}
-.hero h1{font-size:35px}
-#population{font-size:35px}
-.grid,.links{grid-template-columns:1fr}
+    .search-wrapper{
+        display:none;
+    }
+
+    .hero h1{
+        font-size:36px;
+    }
+
+    #population{
+        font-size:35px;
+    }
+
+    .grid,
+    .links{
+        grid-template-columns:1fr;
+    }
 }
 </style>
 </head>
@@ -240,14 +368,25 @@ nav{display:none}
 <header>
 <div class="nav">
 
-<a class="logo" href="index.html">🌍 WorldMetrics</a>
+<a href="index.html" class="logo">🌍 WorldMetrics</a>
 
 <nav>
 <a href="index.html">🏠 Home</a>
 <a href="world.html">🌎 World</a>
 <a href="countries.html">🌐 Countries</a>
 <a href="compare.html">⚖️ Compare</a>
+<a href="rankings.html">🏆 Rankings</a>
 </nav>
+
+<div class="search-wrapper">
+<input
+type="text"
+id="countrySearch"
+placeholder="🔎 Search country..."
+autocomplete="off"
+>
+<div id="searchResults" class="search-results"></div>
+</div>
 
 <button id="theme">🌙</button>
 
@@ -258,28 +397,30 @@ nav{display:none}
 
 <div class="hero-icon">🌍</div>
 
-<h1>
-World <span>Statistics</span>
-</h1>
+<h1>World <span>Statistics</span></h1>
 
-<p>
-Explore numbers that describe our changing world.
-</p>
+<p>Explore countries, statistics and information about our changing world.</p>
+
+<div class="hero-search">
+<input
+type="text"
+id="heroCountrySearch"
+placeholder="🔎 Search for any country — India, Japan, Brazil..."
+autocomplete="off"
+>
+<div id="heroResults" class="search-results"></div>
+</div>
 
 </section>
 
 <section class="population">
 
-<h2>
-🌎 Estimated World Population
-</h2>
+<h2>🌎 Estimated World Population</h2>
 
-<div id="population">
-Loading...
-</div>
+<div id="population">Loading...</div>
 
 <div class="updated">
-Data-driven estimate • WorldMetrics
+🟢 WorldMetrics estimate • Updated continuously
 </div>
 
 </section>
@@ -319,114 +460,283 @@ Data-driven estimate • WorldMetrics
 <div class="card">
 <div class="card-icon">💨</div>
 <h3>CO₂ Emissions</h3>
-<div class="number">36B t</div>
+<div class="number">36B t/year</div>
 </div>
 
 </section>
 
-<div class="links">
+<section class="links">
 
-<a class="link" href="world.html">
-🌎 Explore World
-</a>
+<a class="link" href="world.html">🌎 Explore World</a>
 
-<a class="link" href="countries.html">
-🌐 Explore Countries
-</a>
+<a class="link" href="countries.html">🌐 Explore Countries</a>
 
-<a class="link" href="compare.html">
-⚖️ Compare Countries
-</a>
+<a class="link" href="compare.html">⚖️ Compare Countries</a>
 
-</div>
+<a class="link" href="rankings.html">🏆 Country Rankings</a>
+
+</section>
 
 <div class="creator">
-<span>
-✨ This website is created by
-<strong>Ayan Kumar</strong>
-</span>
+<div class="creator-badge">
+✨ This website is created by <strong>Ayan Kumar</strong>
+</div>
 </div>
 
 <footer>
 <strong>🌍 WorldMetrics</strong>
 <br>
-Independent global statistics project
+Explore, understand and compare our world.
 <br><br>
 © 2026 WorldMetrics
 </footer>
 
 <script>
 
-const theme=document.getElementById("theme");
+/* DARK MODE */
 
-if(localStorage.getItem("worldmetrics-theme")==="dark"){
-document.body.classList.add("dark");
-theme.textContent="☀️";
+const theme = document.getElementById("theme");
+
+if(localStorage.getItem("worldmetrics-theme") === "dark"){
+    document.body.classList.add("dark");
+    theme.textContent = "☀️";
 }
 
-theme.onclick=()=>{
-document.body.classList.toggle("dark");
+theme.onclick = () => {
+    document.body.classList.toggle("dark");
 
-const dark=document.body.classList.contains("dark");
+    const dark = document.body.classList.contains("dark");
 
-localStorage.setItem(
-"worldmetrics-theme",
-dark?"dark":"light"
-);
+    localStorage.setItem(
+        "worldmetrics-theme",
+        dark ? "dark" : "light"
+    );
 
-theme.textContent=dark?"☀️":"🌙";
+    theme.textContent = dark ? "☀️" : "🌙";
 };
 
 
-/*
-IMPORTANT:
-The number below is an estimate.
-It is NOT a live official population counter.
-*/
+/* COUNTRY SEARCH DATA */
 
-let population=8300000000;
+let countries = [];
+
+/* Your existing site's API format */
+const API_URL =
+"https://restcountries.com/v3.1/all?fields=name,cca3,flags";
+
+
+async function loadCountries(){
+
+    try{
+
+        const response = await fetch(API_URL);
+
+        if(!response.ok){
+            throw new Error("Country data unavailable");
+        }
+
+        countries = await response.json();
+
+        countries.sort((a,b) =>
+            a.name.common.localeCompare(b.name.common)
+        );
+
+    }catch(error){
+
+        console.error("Country search error:", error);
+
+    }
+
+}
+
+
+/* CREATE SEARCH */
+
+function setupSearch(inputId, resultsId){
+
+    const input = document.getElementById(inputId);
+    const results = document.getElementById(resultsId);
+
+    input.addEventListener("input", () => {
+
+        const query = input.value
+            .trim()
+            .toLowerCase();
+
+        if(query.length === 0){
+
+            results.style.display = "none";
+            results.innerHTML = "";
+
+            return;
+        }
+
+        if(countries.length === 0){
+
+            results.innerHTML =
+            '<div class="search-item">Loading countries...</div>';
+
+            results.style.display = "block";
+
+            return;
+        }
+
+        const matches = countries
+            .filter(country =>
+                country.name.common
+                .toLowerCase()
+                .includes(query)
+            )
+            .slice(0, 8);
+
+
+        if(matches.length === 0){
+
+            results.innerHTML =
+            '<div class="search-item">No country found</div>';
+
+            results.style.display = "block";
+
+            return;
+        }
+
+
+        results.innerHTML = "";
+
+        matches.forEach(country => {
+
+            const item =
+                document.createElement("div");
+
+            item.className = "search-item";
+
+            item.innerHTML = `
+                <img
+                    class="search-flag"
+                    src="${country.flags.svg}"
+                    alt=""
+                >
+                <div class="search-name">
+                    ${country.name.common}
+                </div>
+            `;
+
+            item.onclick = () => {
+
+                window.location.href =
+                    "country.html?code=" +
+                    encodeURIComponent(country.cca3);
+
+            };
+
+            results.appendChild(item);
+
+        });
+
+        results.style.display = "block";
+
+    });
+
+
+    /* ENTER KEY */
+
+    input.addEventListener("keydown", event => {
+
+        if(event.key === "Enter"){
+
+            const query =
+                input.value.trim().toLowerCase();
+
+            const match =
+                countries.find(country =>
+                    country.name.common
+                    .toLowerCase()
+                    .includes(query)
+                );
+
+            if(match){
+
+                window.location.href =
+                    "country.html?code=" +
+                    encodeURIComponent(match.cca3);
+
+            }
+
+        }
+
+    });
+
+
+    /* CLICK OUTSIDE */
+
+    document.addEventListener("click", event => {
+
+        if(
+            !input.contains(event.target) &&
+            !results.contains(event.target)
+        ){
+            results.style.display = "none";
+        }
+
+    });
+
+}
+
+
+setupSearch("countrySearch", "searchResults");
+
+setupSearch("heroCountrySearch", "heroResults");
+
+loadCountries();
+
+
+/* ESTIMATED POPULATION COUNTER */
+
+let population = 8300000000;
 
 function updatePopulation(){
 
-population+=2;
+    population += 2;
 
-document.getElementById("population")
-.textContent=
-population.toLocaleString();
+    document.getElementById("population")
+        .textContent =
+        population.toLocaleString();
 
 }
 
 updatePopulation();
 
-setInterval(updatePopulation,1000);
+setInterval(updatePopulation, 1000);
 
 
-/* Demonstration daily counters */
+/* DAILY COUNTERS */
 
 function updateCounters(){
 
-const now=new Date();
+    const now = new Date();
 
-const start=new Date();
+    const start = new Date();
 
-start.setHours(0,0,0,0);
+    start.setHours(0,0,0,0);
 
-const seconds=
-Math.floor((now-start)/1000);
+    const seconds =
+        Math.floor((now - start) / 1000);
 
-document.getElementById("births")
-.textContent=
-Math.floor(seconds*4.3).toLocaleString();
+    document.getElementById("births")
+        .textContent =
+        Math.floor(seconds * 4.3)
+        .toLocaleString();
 
-document.getElementById("deaths")
-.textContent=
-Math.floor(seconds*1.8).toLocaleString();
+    document.getElementById("deaths")
+        .textContent =
+        Math.floor(seconds * 1.8)
+        .toLocaleString();
 
 }
 
 updateCounters();
 
-setInterval(updateCounters,1000);
+setInterval(updateCounters, 1000);
 
 </script>
 
