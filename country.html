@@ -3,9 +3,12 @@
 <head>
 
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>Country — WorldMetrics</title>
+
+<meta name="description"
+content="Explore detailed country information with WorldMetrics.">
 
 <link
 rel="stylesheet"
@@ -15,169 +18,397 @@ href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
 <style>
 
 :root{
---blue:#1677ff;
---bg:#f4f7fb;
---card:#fff;
---text:#172033;
---muted:#667085;
---border:#e4e8f0;
---footer:#101828;
+    --blue:#1677ff;
+    --bg:#f4f7fb;
+    --card:#ffffff;
+    --text:#172033;
+    --muted:#667085;
+    --border:#e4e8f0;
+    --footer:#101828;
 }
 
 body.dark{
---bg:#0b1220;
---card:#151f31;
---text:#f8fafc;
---muted:#aab4c4;
---border:#2b374c;
---footer:#070c16;
+    --bg:#0b1220;
+    --card:#151f31;
+    --text:#f8fafc;
+    --muted:#aab4c4;
+    --border:#2b374c;
+    --footer:#070c16;
 }
 
 *{
-box-sizing:border-box;
-margin:0;
-padding:0;
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
 }
 
 body{
-font-family:Arial,sans-serif;
-background:var(--bg);
-color:var(--text);
+    font-family:Arial,Helvetica,sans-serif;
+    background:var(--bg);
+    color:var(--text);
+    transition:.2s;
 }
 
+/* HEADER */
+
 header{
-background:var(--card);
-border-bottom:1px solid var(--border);
-padding:15px 6%;
-position:sticky;
-top:0;
-z-index:1000;
+    background:var(--card);
+    border-bottom:1px solid var(--border);
+    padding:14px 5%;
+    position:sticky;
+    top:0;
+    z-index:1000;
 }
 
 .nav{
-max-width:1200px;
-margin:auto;
-display:flex;
-align-items:center;
-justify-content:space-between;
+    max-width:1250px;
+    margin:auto;
+    display:flex;
+    align-items:center;
+    gap:18px;
 }
 
 .logo{
-font-size:25px;
-font-weight:bold;
-color:var(--blue);
-text-decoration:none;
+    color:var(--blue);
+    font-size:25px;
+    font-weight:bold;
+    text-decoration:none;
+    white-space:nowrap;
 }
 
 nav{
-display:flex;
-gap:20px;
+    display:flex;
+    gap:16px;
+    margin-left:auto;
 }
 
 nav a{
-text-decoration:none;
-color:var(--muted);
-font-weight:bold;
+    color:var(--muted);
+    text-decoration:none;
+    font-size:14px;
+    font-weight:bold;
 }
 
-nav a:hover{
-color:var(--blue);
+nav a:hover,
+nav a.active{
+    color:var(--blue);
 }
+
+/* SEARCH */
+
+.search-wrapper{
+    position:relative;
+    width:240px;
+}
+
+#countrySearch{
+    width:100%;
+    padding:11px 13px;
+    border:1px solid var(--border);
+    border-radius:12px;
+    background:var(--bg);
+    color:var(--text);
+    outline:none;
+}
+
+#countrySearch:focus{
+    border-color:var(--blue);
+}
+
+.search-results{
+    position:absolute;
+    left:0;
+    right:0;
+    top:calc(100% + 7px);
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:14px;
+    overflow:hidden;
+    display:none;
+    max-height:350px;
+    overflow-y:auto;
+    box-shadow:0 12px 30px rgba(0,0,0,.15);
+}
+
+.search-item{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:11px;
+    cursor:pointer;
+    border-bottom:1px solid var(--border);
+}
+
+.search-item:last-child{
+    border-bottom:none;
+}
+
+.search-item:hover{
+    background:var(--bg);
+}
+
+.search-flag{
+    width:30px;
+    height:20px;
+    object-fit:cover;
+    border-radius:3px;
+}
+
+.search-name{
+    font-weight:bold;
+    font-size:14px;
+}
+
+/* THEME */
 
 #theme{
-padding:10px;
-border:1px solid var(--border);
-background:var(--card);
-color:var(--text);
-border-radius:10px;
-cursor:pointer;
+    border:1px solid var(--border);
+    background:var(--card);
+    color:var(--text);
+    border-radius:10px;
+    padding:9px 11px;
+    cursor:pointer;
+    font-size:16px;
 }
+
+/* MOBILE MENU */
+
+#menuButton{
+    display:none;
+    border:1px solid var(--border);
+    background:var(--card);
+    color:var(--text);
+    border-radius:10px;
+    padding:9px 11px;
+    cursor:pointer;
+    font-size:18px;
+}
+
+/* CONTAINER */
 
 .container{
-max-width:1100px;
-margin:auto;
-padding:40px 20px;
+    max-width:1150px;
+    margin:auto;
+    padding:40px 20px 60px;
 }
 
+/* BACK BUTTON */
+
+.back-button{
+    display:inline-block;
+    margin-bottom:20px;
+    padding:10px 16px;
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:10px;
+    color:var(--text);
+    text-decoration:none;
+    font-weight:bold;
+}
+
+.back-button:hover{
+    color:var(--blue);
+    border-color:var(--blue);
+}
+
+/* PROFILE */
+
 .profile{
-background:var(--card);
-border:1px solid var(--border);
-border-radius:22px;
-padding:30px;
-text-align:center;
-margin-bottom:25px;
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:22px;
+    padding:35px 25px;
+    text-align:center;
+    margin-bottom:25px;
 }
 
 .flag{
-width:180px;
-height:115px;
-object-fit:cover;
-border-radius:10px;
-margin-bottom:18px;
+    width:200px;
+    max-width:90%;
+    height:125px;
+    object-fit:contain;
+    border-radius:10px;
+    margin-bottom:20px;
+    box-shadow:0 5px 20px rgba(0,0,0,.12);
 }
 
 .profile h1{
-font-size:35px;
+    font-size:38px;
+    margin-bottom:8px;
 }
 
 .profile p{
-color:var(--muted);
-margin-top:8px;
+    color:var(--muted);
+    line-height:1.5;
 }
 
+/* STATS */
+
 .stats{
-display:grid;
-grid-template-columns:repeat(3,1fr);
-gap:18px;
-margin-bottom:25px;
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:18px;
+    margin-bottom:30px;
 }
 
 .card{
-background:var(--card);
-border:1px solid var(--border);
-border-radius:17px;
-padding:23px;
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:17px;
+    padding:23px;
 }
 
 .card h3{
-font-size:14px;
-color:var(--muted);
-margin-bottom:10px;
+    color:var(--muted);
+    font-size:14px;
+    margin-bottom:10px;
 }
 
 .number{
-font-size:25px;
-font-weight:bold;
-color:var(--blue);
+    color:var(--blue);
+    font-size:22px;
+    font-weight:bold;
+    word-break:break-word;
+}
+
+/* MAP */
+
+.map-title{
+    margin-bottom:15px;
 }
 
 .map{
-height:420px;
-border-radius:20px;
-overflow:hidden;
-border:1px solid var(--border);
+    height:430px;
+    border-radius:20px;
+    overflow:hidden;
+    border:1px solid var(--border);
 }
 
+/* LOADING */
+
+.loading{
+    text-align:center;
+    padding:80px 20px;
+    color:var(--muted);
+    font-size:18px;
+}
+
+/* ERROR */
+
+.error{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:20px;
+    padding:50px 20px;
+    text-align:center;
+}
+
+.error h2{
+    margin-bottom:15px;
+}
+
+.error a{
+    display:inline-block;
+    margin-top:15px;
+    padding:11px 18px;
+    background:var(--blue);
+    color:white;
+    text-decoration:none;
+    border-radius:10px;
+}
+
+/* CREATOR */
+
 .creator{
-text-align:center;
-padding:30px;
+    text-align:center;
+    padding:10px 20px 35px;
+    color:var(--muted);
 }
 
 .creator strong{
-color:var(--blue);
+    color:var(--blue);
 }
 
+/* FOOTER */
+
 footer{
-background:var(--footer);
-color:#ddd;
-text-align:center;
-padding:30px;
+    background:var(--footer);
+    color:#d1d5db;
+    text-align:center;
+    padding:30px 20px;
+    line-height:1.7;
+}
+
+/* MOBILE */
+
+@media(max-width:1050px){
+
+    nav{
+        display:none;
+    }
+
+    #menuButton{
+        display:block;
+        margin-left:auto;
+    }
+
+    .search-wrapper{
+        width:220px;
+    }
+
+    .nav{
+        justify-content:space-between;
+    }
+
 }
 
 @media(max-width:750px){
-nav{display:none}
-.stats{grid-template-columns:1fr}
-.profile h1{font-size:29px}
+
+    header{
+        padding:12px 4%;
+    }
+
+    .logo{
+        font-size:21px;
+    }
+
+    .search-wrapper{
+        display:none;
+    }
+
+    .stats{
+        grid-template-columns:1fr;
+    }
+
+    .profile h1{
+        font-size:30px;
+    }
+
+    .map{
+        height:350px;
+    }
+
+}
+
+@media(max-width:500px){
+
+    .container{
+        padding:25px 14px 45px;
+    }
+
+    .profile{
+        padding:28px 15px;
+    }
+
+    .flag{
+        width:160px;
+        height:105px;
+    }
+
+    .number{
+        font-size:20px;
+    }
+
 }
 
 </style>
@@ -189,30 +420,67 @@ nav{display:none}
 
 <div class="nav">
 
-<a class="logo" href="index.html">
+<a href="index.html" class="logo">
 🌍 WorldMetrics
 </a>
 
-<nav>
+<nav id="navigation">
+
 <a href="index.html">🏠 Home</a>
 <a href="world.html">🌎 World</a>
 <a href="countries.html">🌐 Countries</a>
 <a href="compare.html">⚖️ Compare</a>
+<a href="rankings.html">🏆 Rankings</a>
+
 </nav>
 
-<button id="theme">🌙</button>
+<div class="search-wrapper">
+
+<input
+id="countrySearch"
+type="text"
+placeholder="🔎 Search country..."
+autocomplete="off"
+>
+
+<div
+id="searchResults"
+class="search-results">
+</div>
+
+</div>
+
+<button id="menuButton">
+☰
+</button>
+
+<button id="theme">
+🌙
+</button>
 
 </div>
 
 </header>
 
-<div class="container">
+
+<main class="container">
+
+<a
+href="countries.html"
+class="back-button">
+← Back to Countries
+</a>
 
 <div id="country">
-Loading country...
+
+<div class="loading">
+🌍 Loading country information...
 </div>
 
 </div>
+
+</main>
+
 
 <div class="creator">
 
@@ -221,9 +489,14 @@ Loading country...
 
 </div>
 
+
 <footer>
 
 <strong>🌍 WorldMetrics</strong>
+
+<br>
+
+Explore, understand and compare our world.
 
 <br><br>
 
@@ -231,207 +504,702 @@ Loading country...
 
 </footer>
 
+
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
 <script>
 
-const theme=document.getElementById("theme");
+/* =========================
+   DARK MODE
+========================= */
 
-if(localStorage.getItem("worldmetrics-theme")==="dark"){
-document.body.classList.add("dark");
-theme.textContent="☀️";
+const theme =
+document.getElementById("theme");
+
+if(
+localStorage.getItem("worldmetrics-theme")
+==="dark"
+){
+
+    document.body.classList.add("dark");
+
+    theme.textContent="☀️";
+
 }
 
 theme.onclick=()=>{
-document.body.classList.toggle("dark");
 
-const dark=
-document.body.classList.contains("dark");
+    document.body.classList.toggle("dark");
 
-localStorage.setItem(
-"worldmetrics-theme",
-dark?"dark":"light"
-);
+    const dark =
+    document.body.classList.contains("dark");
 
-theme.textContent=dark?"☀️":"🌙";
+    localStorage.setItem(
+        "worldmetrics-theme",
+        dark ? "dark" : "light"
+    );
+
+    theme.textContent =
+        dark ? "☀️" : "🌙";
+
 };
 
 
-const params=
+/* =========================
+   MOBILE MENU
+========================= */
+
+const menuButton =
+document.getElementById("menuButton");
+
+const navigation =
+document.getElementById("navigation");
+
+menuButton.onclick=()=>{
+
+    if(navigation.style.display==="flex"){
+
+        navigation.style.display="none";
+
+    }else{
+
+        navigation.style.display="flex";
+
+        navigation.style.position="absolute";
+
+        navigation.style.top="65px";
+
+        navigation.style.left="0";
+
+        navigation.style.right="0";
+
+        navigation.style.padding="18px";
+
+        navigation.style.background=
+            "var(--card)";
+
+        navigation.style.borderBottom=
+            "1px solid var(--border)";
+
+        navigation.style.flexDirection="column";
+
+    }
+
+};
+
+
+/* =========================
+   URL COUNTRY CODE
+========================= */
+
+const params =
 new URLSearchParams(
-location.search
+    window.location.search
 );
 
-const code=
+const code =
 params.get("code");
 
 
+/* =========================
+   COUNTRY DATA
+========================= */
+
+let countries=[];
+
+
+/* =========================
+   LOAD SEARCH DATA
+========================= */
+
+async function loadSearchCountries(){
+
+    try{
+
+        const response =
+        await fetch(
+            "https://restcountries.com/v3.1/all?fields=name,cca3,flags,capital,region"
+        );
+
+        if(!response.ok){
+            throw new Error();
+        }
+
+        countries =
+        await response.json();
+
+        countries.sort((a,b)=>
+            a.name.common.localeCompare(
+                b.name.common
+            )
+        );
+
+    }
+    catch(error){
+
+        console.error(
+            "Search data error:",
+            error
+        );
+
+    }
+
+}
+
+
+/* =========================
+   COUNTRY SEARCH
+========================= */
+
+const searchInput =
+document.getElementById(
+    "countrySearch"
+);
+
+const searchResults =
+document.getElementById(
+    "searchResults"
+);
+
+
+searchInput.addEventListener(
+"input",
+function(){
+
+    const query =
+    this.value
+    .trim()
+    .toLowerCase();
+
+    if(!query){
+
+        searchResults.style.display="none";
+        searchResults.innerHTML="";
+        return;
+
+    }
+
+
+    const matches =
+    countries
+    .filter(country=>{
+
+        const name =
+            country.name.common
+            .toLowerCase();
+
+        const official =
+            country.name.official
+            ?country.name.official
+            .toLowerCase()
+            :"";
+
+        const capital =
+            country.capital
+            ?country.capital.join(" ")
+            .toLowerCase()
+            :"";
+
+        const code =
+            country.cca3
+            ?country.cca3
+            .toLowerCase()
+            :"";
+
+        return(
+            name.includes(query) ||
+            official.includes(query) ||
+            capital.includes(query) ||
+            code.includes(query)
+        );
+
+    })
+    .slice(0,10);
+
+
+    searchResults.innerHTML="";
+
+
+    if(matches.length===0){
+
+        searchResults.innerHTML=`
+        <div class="search-item">
+        ❌ No country found
+        </div>
+        `;
+
+        searchResults.style.display="block";
+        return;
+
+    }
+
+
+    matches.forEach(country=>{
+
+        const item =
+        document.createElement("div");
+
+        item.className="search-item";
+
+        item.innerHTML=`
+
+        <img
+        class="search-flag"
+        src="${country.flags?.svg || ""}"
+        alt=""
+        >
+
+        <div>
+
+        <div class="search-name">
+        ${country.name.common}
+        </div>
+
+        <small>
+        ${country.capital
+            ?country.capital[0]
+            :"No capital"}
+        </small>
+
+        </div>
+
+        `;
+
+
+        item.onclick=()=>{
+
+            window.location.href =
+            "country.html?code="+
+            encodeURIComponent(
+                country.cca3
+            );
+
+        };
+
+
+        searchResults.appendChild(item);
+
+    });
+
+
+    searchResults.style.display="block";
+
+});
+
+
+/* ENTER SEARCH */
+
+searchInput.addEventListener(
+"keydown",
+event=>{
+
+    if(event.key==="Enter"){
+
+        const query =
+        searchInput.value
+        .trim()
+        .toLowerCase();
+
+        const match =
+        countries.find(country=>
+
+            country.name.common
+            .toLowerCase()
+            .includes(query)
+
+        );
+
+        if(match){
+
+            window.location.href =
+            "country.html?code="+
+            encodeURIComponent(
+                match.cca3
+            );
+
+        }
+
+    }
+
+});
+
+
+/* CLICK OUTSIDE SEARCH */
+
+document.addEventListener(
+"click",
+event=>{
+
+    if(
+        !searchInput.contains(event.target) &&
+        !searchResults.contains(event.target)
+    ){
+
+        searchResults.style.display="none";
+
+    }
+
+});
+
+
+/* =========================
+   LOAD COUNTRY
+========================= */
+
 async function loadCountry(){
 
-try{
+    const countryBox =
+    document.getElementById("country");
 
-let url;
+    try{
 
-if(code){
+        let url;
 
-url=
-"https://restcountries.com/v3.1/alpha/"
-+code;
+        if(code){
 
-}else{
+            url =
+            "https://restcountries.com/v3.1/alpha/"
+            +encodeURIComponent(code);
 
-url=
-"https://restcountries.com/v3.1/name/India";
+        }else{
+
+            url =
+            "https://restcountries.com/v3.1/name/India";
+
+        }
+
+
+        const response =
+        await fetch(url);
+
+
+        if(!response.ok){
+
+            throw new Error(
+                "Country not found"
+            );
+
+        }
+
+
+        const result =
+        await response.json();
+
+
+        const c =
+        result[0];
+
+
+        document.title =
+        c.name.common+
+        " — WorldMetrics";
+
+
+        const languages =
+        c.languages
+        ?Object.values(c.languages).join(", ")
+        :"N/A";
+
+
+        const currencies =
+        c.currencies
+        ?Object.values(c.currencies)
+            .map(currency=>
+                currency.name+
+                (
+                    currency.symbol
+                    ?" ("+
+                    currency.symbol+
+                    ")"
+                    :""
+                )
+            )
+            .join(", ")
+        :"N/A";
+
+
+        const timezones =
+        c.timezones
+        ?c.timezones.join(", ")
+        :"N/A";
+
+
+        const callingCode =
+        c.idd &&
+        c.idd.root
+        ?c.idd.root+
+        (
+            c.idd.suffixes
+            ?c.idd.suffixes[0] || ""
+            :""
+        )
+        :"N/A";
+
+
+        const borders =
+        c.borders
+        ?c.borders.join(", ")
+        :"None";
+
+
+        countryBox.innerHTML=`
+
+        <div class="profile">
+
+            <img
+            class="flag"
+            src="${c.flags?.svg || ""}"
+            alt="${c.name.common} flag"
+            >
+
+            <h1>
+            ${c.name.common}
+            </h1>
+
+            <p>
+            ${c.name.official || "Official name unavailable"}
+            </p>
+
+        </div>
+
+
+        <div class="stats">
+
+
+            <div class="card">
+
+                <h3>👥 Population</h3>
+
+                <div class="number">
+                ${c.population
+                    ?c.population.toLocaleString()
+                    :"N/A"}
+                </div>
+
+            </div>
+
+
+            <div class="card">
+
+                <h3>📐 Area</h3>
+
+                <div class="number">
+                ${c.area
+                    ?c.area.toLocaleString()
+                    :"N/A"}
+                km²
+                </div>
+
+            </div>
+
+
+            <div class="card">
+
+                <h3>🏛️ Capital</h3>
+
+                <div class="number">
+                ${c.capital
+                    ?c.capital.join(", ")
+                    :"N/A"}
+                </div>
+
+            </div>
+
+
+            <div class="card">
+
+                <h3>🌍 Region</h3>
+
+                <div class="number">
+                ${c.region || "N/A"}
+                </div>
+
+            </div>
+
+
+            <div class="card">
+
+                <h3>📍 Subregion</h3>
+
+                <div class="number">
+                ${c.subregion || "N/A"}
+                </div>
+
+            </div>
+
+
+            <div class="card">
+
+                <h3>🗣️ Languages</h3>
+
+                <div class="number">
+                ${languages}
+                </div>
+
+            </div>
+
+
+            <div class="card">
+
+                <h3>💰 Currency</h3>
+
+                <div class="number">
+                ${currencies}
+                </div>
+
+            </div>
+
+
+            <div class="card">
+
+                <h3>🕐 Time Zones</h3>
+
+                <div class="number">
+                ${timezones}
+                </div>
+
+            </div>
+
+
+            <div class="card">
+
+                <h3>📞 Calling Code</h3>
+
+                <div class="number">
+                ${callingCode}
+                </div>
+
+            </div>
+
+
+            <div class="card">
+
+                <h3>🚗 Driving Side</h3>
+
+                <div class="number">
+                ${c.car?.side || "N/A"}
+                </div>
+
+            </div>
+
+
+            <div class="card">
+
+                <h3>🧭 Continent</h3>
+
+                <div class="number">
+                ${c.continents
+                    ?c.continents.join(", ")
+                    :"N/A"}
+                </div>
+
+            </div>
+
+
+            <div class="card">
+
+                <h3>🌐 ISO Code</h3>
+
+                <div class="number">
+                ${c.cca3 || "N/A"}
+                </div>
+
+            </div>
+
+
+            <div class="card">
+
+                <h3>🤝 Borders</h3>
+
+                <div class="number">
+                ${borders}
+                </div>
+
+            </div>
+
+
+        </div>
+
+
+        <h2 class="map-title">
+        🗺️ Location
+        </h2>
+
+        <div
+        id="map"
+        class="map">
+        </div>
+
+        `;
+
+
+        /* MAP */
+
+        if(c.latlng){
+
+            const map =
+            L.map("map")
+            .setView(
+                c.latlng,
+                4
+            );
+
+
+            L.tileLayer(
+                "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {
+                    attribution:
+                    "© OpenStreetMap contributors"
+                }
+            ).addTo(map);
+
+
+            L.marker(c.latlng)
+            .addTo(map)
+            .bindPopup(
+                "<strong>"+
+                c.name.common+
+                "</strong>"
+            )
+            .openPopup();
+
+        }
+
+    }
+    catch(error){
+
+        console.error(error);
+
+        countryBox.innerHTML=`
+
+        <div class="error">
+
+            <h2>
+            ⚠️ Country information could not be loaded
+            </h2>
+
+            <p>
+            Please check the country code or try again.
+            </p>
+
+            <a href="countries.html">
+            🌐 Browse Countries
+            </a>
+
+        </div>
+
+        `;
+
+    }
 
 }
 
-const response=
-await fetch(url);
 
-const result=
-await response.json();
+/* =========================
+   START
+========================= */
 
-const c=result[0];
-
-document.title=
-c.name.common+
-" — WorldMetrics";
-
-
-document.getElementById(
-"country"
-).innerHTML=`
-
-<div class="profile">
-
-<img
-class="flag"
-src="${c.flags.svg}"
-alt="${c.name.common}"
->
-
-<h1>
-${c.name.common}
-</h1>
-
-<p>
-${c.official||c.name.official}
-</p>
-
-</div>
-
-
-<div class="stats">
-
-<div class="card">
-<h3>👥 Population</h3>
-<div class="number">
-${c.population
-?c.population.toLocaleString()
-:"N/A"}
-</div>
-</div>
-
-
-<div class="card">
-<h3>📏 Area</h3>
-<div class="number">
-${c.area
-?c.area.toLocaleString()
-:"N/A"} km²
-</div>
-</div>
-
-
-<div class="card">
-<h3>🏛️ Capital</h3>
-<div class="number">
-${c.capital
-?c.capital.join(", ")
-:"N/A"}
-</div>
-</div>
-
-
-<div class="card">
-<h3>🌍 Region</h3>
-<div class="number">
-${c.region||"N/A"}
-</div>
-</div>
-
-
-<div class="card">
-<h3>🗣️ Languages</h3>
-<div class="number">
-${c.languages
-?Object.values(c.languages).join(", ")
-:"N/A"}
-</div>
-</div>
-
-
-<div class="card">
-<h3>💰 Currency</h3>
-<div class="number">
-${c.currencies
-?Object.values(c.currencies)
-.map(x=>x.name)
-.join(", ")
-:"N/A"}
-</div>
-</div>
-
-</div>
-
-
-<h2 style="margin-bottom:15px">
-🗺️ Location
-</h2>
-
-<div id="map" class="map"></div>
-
-`;
-
-
-if(c.latlng){
-
-const map=
-L.map("map")
-.setView(c.latlng,4);
-
-
-L.tileLayer(
-"https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-{
-attribution:
-"© OpenStreetMap contributors"
-}
-).addTo(map);
-
-
-L.marker(c.latlng)
-.addTo(map)
-.bindPopup(
-"<strong>"
-+c.name.common+
-"</strong>"
-)
-.openPopup();
-
-}
-
-}catch(error){
-
-document.getElementById(
-"country"
-).innerHTML=
-"<h2>Country information could not be loaded.</h2>";
-
-}
-
-}
-
+loadSearchCountries();
 loadCountry();
 
 </script>
